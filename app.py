@@ -81,7 +81,7 @@ def add_attendance(name):
     current_time = datetime.now().strftime("%I:%M %p")
 
     df = pd.read_csv(f'Attendance/{datetoday}.csv')
-    if int(userid) not in list(df['ID']):
+    if userid not in list(df['ID']):
         with open(f'Attendance/{datetoday}.csv', 'a') as f:
             f.write(f'\n{username},{userid},{current_time}')
 
@@ -112,8 +112,14 @@ def start():
             cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 20), 2)
             face = cv2.resize(frame[y:y + h, x:x + w], (50, 50))
             identified_person = identify_face(face.reshape(1, -1))[0]
+            identified_person_name = identified_person.split('_')[0]
+            identified_person_id = identified_person.split('_')[1]
             add_attendance(identified_person)
-            cv2.putText(frame, f'{identified_person}', (30, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 20), 2,
+            cv2.putText(frame, f'Name: {identified_person_name}', (30, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 20), 2,
+                        cv2.LINE_AA)
+            cv2.putText(frame, f'ID: {identified_person_id}', (30, 60), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 20), 2,
+                        cv2.LINE_AA)
+            cv2.putText(frame, 'Press E to close', (30, 90), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 127, 255), 2,
                         cv2.LINE_AA)
         cv2.imshow('Attendance', frame)
         if cv2.waitKey(1) & 0xFF == ord('e'):
