@@ -8,25 +8,25 @@
 }
 
 body {
-	background-image: url(/static/background.jpg);
+	background-image: url(/static/resources/background.jpg);
 	background-size: cover;
 	font-family: Tahoma;
-	padding: 60px 0 0 0;
+	padding: 60px 0;
 	height: 100vh;
 	margin: 0;
 }
 
 table {
-	border: 1px;
-	font-family: Tahola, arial, sans-serif;
+	border: 0px;
+	font-family: Tahoma, arial, sans-serif;
 	border-collapse: collapse;
-	width: 86%;
+	width: 60%;
 	margin: auto;
 }
 
 td,
 th {
-	border: 1px solid #727075 !important;
+	border: 0px solid #727075 !important;
 	padding: 5px;
 }
 
@@ -36,78 +36,100 @@ tr:nth-child(even) {
 </style>
 
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
-	<link rel="icon" href="/static/favicon.ico?" type="image/x-icon">
-	<link rel="shortcut icon" href="/static/favicon.ico?" type="image/x-icon">
-	<title>Facial Recognition Attendance System</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+    <link rel="icon" href="/static/resources/favicon.ico?" type="image/x-icon">
+    <link rel="shortcut icon" href="/static/resources/favicon.ico?" type="image/x-icon">
+    <title>Facial Recognition Attendance System</title>
 </head>
 
 <body>
-	<div class='mt-3 text-center'>
-		<h1 style="width: auto; margin: auto; color: #1B1B1F; padding: 11px; font-size: 44px; font-weight: bold;">Facial Recognition Attendance System</h1> </div>
-	<div class='mt-3 text-center'>
-		<h3 style="font-size: 24px; color: #1B1B1F; font-weight: bold;">{{ datetoday2 }} | <span id="clock"></span></h3> </div> {% if mess%}
-	<p class="text-center" style="color: #1F0060; font-size: 20px;">{{ mess }}</p> {% endif %}
-	<div class="row text-center" style="padding: 20px; margin: 60px 20px 20px 20px;">
-		<div class="col" style="border-radius: 24px; padding: 0px; background-color: #F4F3FB; margin: 0px 10px 10px 10px; min-height: 400px;">
-			<h2 style="border-radius: 24px 24px 0px 0px; background-color: #E7DEFF; color: #1F0060; padding: 18px 10px 18px 10px;">Today's Attendance <i class="material-icons">assignment</i></h2>
-			<div>
-				<a style="text-decoration: none;max-width: 300px;" href="/start">
-					<button style="letter-spacing: 4px; background-color: #3C5BA9 !important; border: 0px; font-size: 22px; border-radius: 24px; width: 70%; padding: 10px; margin-top: 30px; margin-bottom: 30px;" type='submit' class='btn btn-primary'>Take Attendance</button>
-				</a>
-			</div>
-			<table style="background-color: white; margin-top: 18px;">
-				<tr>
-					<td><b>No.</b></td>
-					<td><b>Name</b></td>
-					<td><b>ID</b></td>
-					<td><b>Time</b></td>
-				</tr> {% if l %} {% for i in range(l) %}
-				<tr>
-					<td>{{ i+1 }}</td>
-					<td>{{ names[i] }}</td>
-					<td>{{ rolls[i] }}</td>
-					<td>{{ times[i] }}</td>
-				</tr> {% endfor %} {% endif %} </table>
-		</div>
-		<div class="col" style="border-radius: 24px; padding: 0px; background-color: #F4F3FB; margin:0px 10px 10px 10px; min-height: 400px;">
-			<form action='/add' method="POST" enctype="multipart/form-data">
-				<h2 style="vertical-align: center; border-radius: 24px 24px 0px 0px; background-color: #E7DEFF; color: #1F0060; padding: 18px 10px 18px 10px;">Add New User <i class="material-icons">add_circle</i></h2>
-				<label style="font-size: 24px; margin-bottom: 6px; margin-top: 6px;"><span style="color: #201A19;">Name</span></label>
-				<br>
-				<input type="text" id="newusername" name='newusername' style="width: 70%; font-size: 16px; margin: 8px 0 10px 0; border: 1px solid #797475; border-radius: 24px; padding: 12px 16px 12px 16px;" required>
-				<br>
-				<label style="font-size: 24px; margin-bottom: 6px;"><span style="color: #201A19;">User ID</span></label>
-				<br>
-				<input type="tel" pattern="[0-9\-]+" id="newusereid" name='newuserid' style="width: 70%; font-size: 16px; margin: 8px 0 10px 0; border: 1px solid #797475; border-radius: 24px; padding: 12px 16px 12px 16px;" required>
-				<br>
-				<button style="letter-spacing: 4px; background-color: #3C5BA9 !important; width: 70%; margin-top: 20px; font-size: 22px; padding: 10px; border-radius: 24px; border: 0px;" type='submit' class='btn btn-dark'>Submit New User</button>
-				<br>
-				<h5 style="padding: 25px; color: #201A19;">Total Users in Database: {{totalreg}}</h5> </form>
-		</div>
-	</div>
-	<script type="text/javascript">
-	function formatAMPM(time) {
-		var hours = time.getHours();
-		var minutes = time.getMinutes();
-		var ampm = hours >= 12 ? 'PM' : 'AM';
-		hours %= 12;
-		hours = hours ? hours : 12;
-		hours = hours < 10 ? '0' + hours : hours;
-		minutes = minutes < 10 ? '0' + minutes : minutes;
-		var strTime = hours + ':' + minutes + ' ' + ampm;
-		return strTime;
-	}
-	var clockElement = document.getElementById('clock');
+<div class='mt-3 text-center'>
+    <h1 style="width: auto; margin: auto; color: #1B1B1F; padding: 11px; font-size: 44px; font-weight: bold;"><a href="http://127.0.0.1:5000/" style="outline: none !important; text-decoration: none !important; color: #1B1B1F;">Facial Recognition Attendance System</a></h1></div>
+{% if mess%}
+<p class="text-center" style="color: #1F0060; font-size: 24px;">{{ mess }}</p> {% endif %}
+<div class='mt-3' style="padding-bottom: 60px;">
+    <table width="100%" class="text-center" cellspacing="0" cellpadding="0"
+           style="padding: 20px; margin: 60px auto 20px auto; table-layout: fixed;">
+        <tr>
+            <td width="33%">
+                <a href="attendance" style="outline: none; text-decoration: none;">
+                    <div style="min-width: 320px; display: inline-block; box-shadow: 5px 4px 6px rgba(0, 0, 0, 0.3); border-radius: 48px; padding: 100px 0; background-color: #E7DEFF; margin: 10px;">
+                        <img style="margin-bottom: 12px;" src="static/resources/take_attendance.png"
+                             alt="take_attendance.png" width="120px" height="120px"/><br/>
+                        <span style="color: #1F0060; font-weight: bold;">Take Attendance</span>
+                    </div>
+                </a>
+            </td>
+            <td width="33%">
+                <a href="adduser" style="outline: none; text-decoration: none;">
+                    <div style="min-width: 320px; display: inline-block; box-shadow: 5px 4px 6px rgba(0, 0, 0, 0.3); border-radius: 48px; padding: 100px 0; background-color: #E7DEFF; margin: 10px;">
+                        <img style="margin-bottom: 12px;" src="static/resources/add_user.png" alt="add_user.png"
+                             width="120px" height="120px"/><br/>
+                        <span style="color: #1F0060; font-weight: bold;">Add New User</span>
+                    </div>
+                </a>
+            </td>
+            {% if not admin %}
+            <td width="33%">
+                <a href="login" style="outline: none; text-decoration: none;">
+                    <div style="min-width: 320px; display: inline-block; box-shadow: 5px 4px 6px rgba(0, 0, 0, 0.3); border-radius: 48px; padding: 100px 0; background-color: #E7DEFF; margin: 10px;">
 
-	function clock() {
-		clockElement.textContent = formatAMPM(new Date()).toString();
-	}
-	setInterval(clock, 1000);
-	</script>
+                        <img style="margin-bottom: 12px;" src="static/resources/admin_panel.png" alt="admin_panel.png"
+                             width="120px" height="120px"/><br/>
+                        <span style="color: #1F0060; font-weight: bold;">Admin Panel</span>
+                    </div>
+                </a>
+            </td>
+            {% endif %}
+            {% if admin %}
+            <td width="33%">
+                <a href="attendancelist" style="outline: none; text-decoration: none;">
+                    <div style="min-width: 320px; display: inline-block; box-shadow: 5px 4px 6px rgba(0, 0, 0, 0.3); border-radius: 48px; padding: 100px 0; background-color: #E7DEFF; margin: 10px;">
+                        <img style="margin-bottom: 12px;" src="static/resources/attendance_list.png"
+                             alt="attendance_list.png" width="120px" height="120px"/><br/>
+                        <span style="color: #1F0060; font-weight: bold;">Attendance List</span>
+                    </div>
+                </a>
+            </td>
+            {% endif %}
+        </tr>
+        {% if admin %}
+        <tr style="background: none;">
+            <td width="33%">
+                <a href="registereduserlist" style="outline: none; text-decoration: none;">
+                    <div style="min-width: 320px; display: inline-block; box-shadow: 5px 4px 6px rgba(0, 0, 0, 0.3); border-radius: 48px; padding: 100px 0; background-color: #E7DEFF; margin: 10px;">
+                        <img style="margin-bottom: 12px;" src="static/resources/user_list.png" alt="user_list.png"
+                             width="120px" height="120px"/><br/>
+                        <span style="color: #1F0060; font-weight: bold;">Registered User List</span>
+                    </div>
+                </a>
+            </td>
+            <td width="33%">
+                <a href="pendinguserlist" style="outline: none; text-decoration: none;">
+                    <div style="min-width: 320px; display: inline-block; box-shadow: 5px 4px 6px rgba(0, 0, 0, 0.3); border-radius: 48px; padding: 100px 0; background-color: #E7DEFF; margin: 10px;">
+                        <img style="margin-bottom: 12px;" src="static/resources/pending_list.png" alt="pending_list.png"
+                             width="120px" height="120px"/><br/>
+                        <span style="color: #1F0060; font-weight: bold;">Pending User List</span>
+                    </div>
+                </a>
+            </td>
+            <td width="33%">
+                <a href="login" style="outline: none; text-decoration: none;">
+                    <div style="min-width: 320px; display: inline-block; box-shadow: 5px 4px 6px rgba(0, 0, 0, 0.3); border-radius: 48px; padding: 100px 0; background-color: #E7DEFF; margin: 10px;">
+                        <img style="margin-bottom: 12px;" src="static/resources/log_out.png" alt="log_out.png"
+                             width="120px" height="120px"/><br/>
+                        <span style="color: #1F0060; font-weight: bold;">Log Out</span>
+                    </div>
+                </a>
+            </td>
+        </tr>
+        {% endif %}
+    </table>
+</div>
 </body>
 
 </html>
