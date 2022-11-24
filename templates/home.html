@@ -38,6 +38,27 @@ th {
 tr:nth-child(even) {
 	background-color: #DAE1FF;
 }
+
+.row {
+    width: 70%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+
+.row > a {
+    flex-grow: 1;
+    max-width: 300px;
+    flex-basis: 23.33%;
+    padding: 60px;
+    box-shadow: 5px 4px 6px rgba(0, 0, 0, 0.3);
+    border-radius: 48px;
+    background-color: #E7DEFF;
+    margin: 10px;
+    text-align: center;
+}
+
 </style>
 
 <head>
@@ -53,88 +74,69 @@ tr:nth-child(even) {
 
 <body>
 <div class='mt-3 text-center'>
-    <h1 style="width: auto; margin: auto; color: #1B1B1F; padding: 11px; font-size: 44px; font-weight: bold;"><a href="http://127.0.0.1:5000/" style="outline: none !important; text-decoration: none !important; color: #1B1B1F;">Facial Recognition Attendance System</a></h1></div>
+    <h1 style="width: auto; margin: auto; color: #1B1B1F; padding: 11px; font-size: 44px; font-weight: bold;"><a
+            href="http://127.0.0.1:5000/"
+            style="outline: none !important; text-decoration: none !important; color: #1B1B1F;">Facial Recognition
+        Attendance System</a></h1></div>
 {% if mess%}
 <p class="text-center" style="color: #1F0060; font-size: 24px;">{{ mess }}</p> {% endif %}
 <div class='mt-3' style="padding-bottom: 60px;">
-    <table width="100%" class="text-center" cellspacing="0" cellpadding="0"
-           style="padding: 20px; margin: 60px auto 20px auto; table-layout: fixed;">
-        <tr>
-            <td width="33%">
-                <a href="attendance" style="outline: none; text-decoration: none;">
-                    <div style="min-width: 320px; display: inline-block; box-shadow: 5px 4px 6px rgba(0, 0, 0, 0.3); border-radius: 48px; padding: 100px 0; background-color: #E7DEFF; margin: 10px;">
-                        <img style="margin-bottom: 12px;" src="static/resources/take_attendance.png"
-                             alt="take_attendance.png" width="120px" height="120px"/><br/>
-                        <span style="color: #1F0060; font-weight: bold;">Take Attendance</span>
-                    </div>
-                </a>
-            </td>
-            <td width="33%">
-                <a href="adduser" style="outline: none; text-decoration: none;">
-                    <div style="min-width: 320px; display: inline-block; box-shadow: 5px 4px 6px rgba(0, 0, 0, 0.3); border-radius: 48px; padding: 100px 0; background-color: #E7DEFF; margin: 10px;">
-                        <img style="margin-bottom: 12px;" src="static/resources/add_user.png" alt="add_user.png"
-                             width="120px" height="120px"/><br/>
-                        <span style="color: #1F0060; font-weight: bold;">Add New User</span>
-                    </div>
-                </a>
-            </td>
-            {% if not admin %}
-            <td width="33%">
-                <a href="login" style="outline: none; text-decoration: none;">
-                    <div style="min-width: 320px; display: inline-block; box-shadow: 5px 4px 6px rgba(0, 0, 0, 0.3); border-radius: 48px; padding: 100px 0; background-color: #E7DEFF; margin: 10px;">
-
-                        <img style="margin-bottom: 12px;" src="static/resources/admin_panel.png" alt="admin_panel.png"
-                             width="120px" height="120px"/><br/>
-                        <span style="color: #1F0060; font-weight: bold;">Admin Panel</span>
-                    </div>
-                </a>
-            </td>
-            {% endif %}
-            {% if admin %}
-            <td width="33%">
-                <a href="attendancelist" style="outline: none; text-decoration: none;">
-                    <div style="min-width: 320px; display: inline-block; box-shadow: 5px 4px 6px rgba(0, 0, 0, 0.3); border-radius: 48px; padding: 100px 0; background-color: #E7DEFF; margin: 10px;">
-                        <img style="margin-bottom: 12px;" src="static/resources/attendance_list.png"
-                             alt="attendance_list.png" width="120px" height="120px"/><br/>
-                        <span style="color: #1F0060; font-weight: bold;">Attendance List</span>
-                    </div>
-                </a>
-            </td>
-            {% endif %}
-        </tr>
-        {% if admin %}
-        <tr style="background: none;">
-            <td width="33%">
-                <a href="registereduserlist" style="outline: none; text-decoration: none;">
-                    <div style="min-width: 320px; display: inline-block; box-shadow: 5px 4px 6px rgba(0, 0, 0, 0.3); border-radius: 48px; padding: 100px 0; background-color: #E7DEFF; margin: 10px;">
-                        <img style="margin-bottom: 12px;" src="static/resources/user_list.png" alt="user_list.png"
-                             width="120px" height="120px"/><br/>
-                        <span style="color: #1F0060; font-weight: bold;">Registered User List</span>
-                    </div>
-                </a>
-            </td>
-            <td width="33%">
-                <a href="pendinguserlist" style="outline: none; text-decoration: none;">
-                    <div style="min-width: 320px; display: inline-block; box-shadow: 5px 4px 6px rgba(0, 0, 0, 0.3); border-radius: 48px; padding: 100px 0; background-color: #E7DEFF; margin: 10px;">
-                        <img style="margin-bottom: 12px;" src="static/resources/pending_list.png" alt="pending_list.png"
-                             width="120px" height="120px"/><br/>
-                        <span style="color: #1F0060; font-weight: bold;">Pending User List</span>
-                    </div>
-                </a>
-            </td>
-            <td width="33%">
-                <a href="login" style="outline: none; text-decoration: none;">
-                    <div style="min-width: 320px; display: inline-block; box-shadow: 5px 4px 6px rgba(0, 0, 0, 0.3); border-radius: 48px; padding: 100px 0; background-color: #E7DEFF; margin: 10px;">
-                        <img style="margin-bottom: 12px;" src="static/resources/log_out.png" alt="log_out.png"
-                             width="120px" height="120px"/><br/>
-                        <span style="color: #1F0060; font-weight: bold;">Log Out</span>
-                    </div>
-                </a>
-            </td>
-        </tr>
+    <div class="row" style="margin: 60px auto;">
+        <a href="attendance" style="outline: none; text-decoration: none;">
+            <div class="col">
+                <img style="margin-bottom: 12px;" src="static/resources/take_attendance.png"
+                     alt="take_attendance.png" width="120px" height="120px"/><br/>
+                <span style="color: #1F0060; font-weight: bold;">Take Attendance</span>
+            </div>
+        </a>
+        <a href="adduser" style="outline: none; text-decoration: none;">
+            <div class="col">
+                <img style="margin-bottom: 12px;" src="static/resources/add_user.png" alt="add_user.png"
+                     width="120px" height="120px"/><br/>
+                <span style="color: #1F0060; font-weight: bold;">Add New User</span>
+            </div>
+        </a>
+        {% if not admin %}
+        <a href="login" style="outline: none; text-decoration: none;">
+            <div class="col">
+                <img style="margin-bottom: 12px;" src="static/resources/admin_panel.png" alt="admin_panel.png"
+                     width="120px" height="120px"/><br/>
+                <span style="color: #1F0060; font-weight: bold;">Admin Panel</span>
+            </div>
+        </a>
         {% endif %}
-    </table>
-</div>
+        {% if admin %}
+        <a href="attendancelist" style="outline: none; text-decoration: none;">
+            <div class="col">
+                <img style="margin-bottom: 12px;" src="static/resources/attendance_list.png"
+                     alt="attendance_list.png" width="120px" height="120px"/><br/>
+                <span style="color: #1F0060; font-weight: bold;">Attendance List</span>
+            </div>
+        </a>
+        {% endif %}
+        {% if admin %}
+        <a href="registereduserlist" style="outline: none; text-decoration: none;">
+            <div class="col">
+                <img style="margin-bottom: 12px;" src="static/resources/user_list.png" alt="user_list.png"
+                     width="120px" height="120px"/><br/>
+                <span style="color: #1F0060; font-weight: bold;">Registered User List</span>
+            </div>
+        </a>
+        <a href="pendinguserlist" style="outline: none; text-decoration: none;">
+            <div class="col">
+                <img style="margin-bottom: 12px;" src="static/resources/pending_list.png" alt="pending_list.png"
+                     width="120px" height="120px"/><br/>
+                <span style="color: #1F0060; font-weight: bold;">Pending User List</span>
+            </div>
+        </a>
+        <a href="login" style="outline: none; text-decoration: none;">
+            <div class="col">
+                <img style="margin-bottom: 12px;" src="static/resources/log_out.png" alt="log_out.png"
+                     width="120px" height="120px"/><br/>
+                <span style="color: #1F0060; font-weight: bold;">Log Out</span>
+            </div>
+        </a>
+        {% endif %}
+    </div>
 </body>
-
 </html>
