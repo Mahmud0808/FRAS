@@ -160,17 +160,17 @@ def attendancebtn():
             cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 20), 2)
             face = cv2.resize(frame[y:y + h, x:x + w], (50, 50))
             identified_person = identify_face(face.reshape(1, -1))[0]
-            identified_person_name = identified_person.split('_')[0]
-            identified_person_id = identified_person.split('_')[1]
+            identified_person_name = identified_person.split('$')[0]
+            identified_person_id = identified_person.split('$')[1]
             add_attendance(identified_person)
             cv2.putText(frame, f'Name: {identified_person_name}', (30, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 20), 2,
                         cv2.LINE_AA)
             cv2.putText(frame, f'ID: {identified_person_id}', (30, 60), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 20), 2,
                         cv2.LINE_AA)
-            cv2.putText(frame, 'Press E to close', (30, 90), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 127, 255), 2,
+            cv2.putText(frame, 'Press Esc to close', (30, 90), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 127, 255), 2,
                         cv2.LINE_AA)
         cv2.imshow('Attendance', frame)
-        if cv2.waitKey(1) & 0xFF == ord('e'):
+        if cv2.waitKey(1) == 27:
             break
 
     cap.release()
@@ -236,7 +236,7 @@ def adduserbtn():
         if j == 500:
             break
         cv2.imshow('Adding New User', frame)
-        if cv2.waitKey(1):
+        if cv2.waitKey(1) == 27:
             break
 
     cap.release()
@@ -634,4 +634,4 @@ def logout():
 
 # ======= Main Function =========
 if __name__ == '__main__':
-    app.run(debug=False)
+    app.run(debug=True)
