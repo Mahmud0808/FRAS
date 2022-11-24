@@ -15,6 +15,7 @@ app = Flask(__name__)
 app.secret_key = os.urandom(24)
 
 
+# ======= Flask Error Handler =======
 @app.errorhandler(404)
 @app.errorhandler(401)
 @app.errorhandler(500)
@@ -71,6 +72,9 @@ def train_model():
     if 'face_recognition_model.pkl' in os.listdir('static'):
         os.remove('static/face_recognition_model.pkl')
 
+    if len(os.listdir('static/faces')) == 0:
+        return
+
     faces = []
     labels = []
     user_list = os.listdir('static/faces')
@@ -87,9 +91,36 @@ def train_model():
     joblib.dump(knn, 'static/face_recognition_model.pkl')
 
 
+# ======= Remove Attendance of Deleted User ======
+def remAttendance():
+    dfu = pd.read_csv('UserList/Unregistered.csv')
+    dfr = pd.read_csv('UserList/Registered.csv')
+
+    for file in os.listdir('Attendance'):
+        df = pd.read_csv(f'Attendance/{file}')
+        df.reset_index()
+        csv_file = csv.reader(open(f'Attendance/' + file, "r"), delimiter=",")
+
+        skip_header = True
+        i = 0
+        for row in csv_file:
+            if skip_header:
+                skip_header = False
+                continue
+
+            if str(row[1]) not in list(map(str, dfu['ID'])) and str(row[1]) not in list(map(str, dfr['ID'])):
+                df.drop(df.index[i], inplace=True)
+                df.to_csv(f'Attendance/{file}', index=False)
+
+            i += 1
+
+
 # ======== Get Info From Attendance File =========
 def extract_attendance():
+    dfu = pd.read_csv('UserList/Unregistered.csv')
+    dfr = pd.read_csv('UserList/Registered.csv')
     df = pd.read_csv(f'Attendance/{datetoday}.csv')
+
     names = df['Name']
     rolls = df['ID']
     sec = df['Section']
@@ -97,10 +128,8 @@ def extract_attendance():
     dates = f'{datetoday}'
 
     reg = []
-    dfu = pd.read_csv('UserList/Unregistered.csv')
-    dfr = pd.read_csv('UserList/Registered.csv')
     roll = list(rolls)
-    for i in range(len(roll)):
+    for i in range(len(df)):
         if str(roll[i]) in list(map(str, dfu['ID'])):
             reg.append("Unregistered")
         elif str(roll[i]) in list(map(str, dfr['ID'])):
@@ -481,6 +510,8 @@ def deleteregistereduser():
         sec.append(row[2])
         l += 1
 
+    remAttendance()
+
     if l != 0:
         return render_template('registereduserlist.html', names=names, rolls=rolls, sec=sec, l=l,
                                mess=f'Number of Registered Students: {l}')
@@ -602,6 +633,8 @@ def deletependinguser():
         sec.append(row[2])
         l += 1
 
+    remAttendance()
+
     if l != 0:
         return render_template('pendinguserlist.html', names=names, rolls=rolls, sec=sec, l=l,
                                mess=f'Number of Pending Students: {l}')
@@ -636,4 +669,4 @@ def logout():
 
 # ======= Main Function =========
 if __name__ == '__main__':
-    app.run(debug=False)
+    app.run(debug=True)
