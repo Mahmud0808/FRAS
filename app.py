@@ -1,4 +1,5 @@
 import csv
+import shutil
 import cv2
 import os
 from flask import Flask, request, render_template, session, redirect, g, url_for
@@ -39,10 +40,10 @@ if not os.path.isdir('static/faces'):
 if f'{datetoday}.csv' not in os.listdir('Attendance'):
     with open(f'Attendance/{datetoday}.csv', 'w') as f:
         f.write('Name,ID,Section,Time')
-if f'Registered.csv' not in os.listdir('UserList'):
+if 'Registered.csv' not in os.listdir('UserList'):
     with open('UserList/Registered.csv', 'w') as f:
         f.write('Name,ID,Section')
-if f'Unregistered.csv' not in os.listdir('UserList'):
+if 'Unregistered.csv' not in os.listdir('UserList'):
     with open('UserList/Unregistered.csv', 'w') as f:
         f.write('Name,ID,Section')
 
@@ -67,15 +68,19 @@ def identify_face(face_array):
 
 # ======= Train Model Using Available Faces ========
 def train_model():
+    if 'face_recognition_model.pkl' in os.listdir('static'):
+        os.remove('static/face_recognition_model.pkl')
+
     faces = []
     labels = []
     user_list = os.listdir('static/faces')
-    for admin in user_list:
-        for img_name in os.listdir(f'static/faces/{admin}'):
-            img = cv2.imread(f'static/faces/{admin}/{img_name}')
+    for user in user_list:
+        for img_name in os.listdir(f'static/faces/{user}'):
+            img = cv2.imread(f'static/faces/{user}/{img_name}')
             resized_face = cv2.resize(img, (50, 50))
             faces.append(resized_face.ravel())
-            labels.append(admin)
+            labels.append(user)
+
     faces = np.array(faces)
     knn = KNeighborsClassifier(n_neighbors=5)
     knn.fit(faces, labels)
@@ -394,6 +399,7 @@ def registereduserlist():
                                mess="Database is empty!")
 
 
+# ========== Flask Unregister a User ============
 @app.route('/unregisteruser', methods=['GET', 'POST'])
 def unregisteruser():
     if not g.user:
@@ -401,11 +407,15 @@ def unregisteruser():
 
     idx = int(request.form['index'])
 
-    pd.read_csv('UserList/Registered.csv').iloc[[idx]].to_csv('UserList/Unregistered.csv', encoding='utf-8', mode='a',
-                                                                index=False, header=False)
-    df = pd.read_csv('UserList/Registered.csv')
-    df.drop(df.index[idx], inplace=True)
-    df.to_csv('UserList/Registered.csv', index=False)
+    dfu = pd.read_csv('UserList/Unregistered.csv')
+    dfr = pd.read_csv('UserList/Registered.csv')
+
+    row = dfr.iloc[[idx]]
+    dfu = dfu.append(row, ignore_index=True)
+    dfu.to_csv('UserList/Unregistered.csv', index=False)
+
+    dfr.drop(dfr.index[idx], inplace=True)
+    dfr.to_csv('UserList/Registered.csv', index=False)
 
     names = []
     rolls = []
@@ -432,6 +442,7 @@ def unregisteruser():
                                mess="Database is empty!")
 
 
+# ========== Flask Delete a User from Registered List ============
 @app.route('/deleteregistereduser', methods=['GET', 'POST'])
 def deleteregistereduser():
     if not g.user:
@@ -439,9 +450,17 @@ def deleteregistereduser():
 
     idx = int(request.form['index'])
 
-    df = pd.read_csv('UserList/Registered.csv')
-    df.drop(df.index[idx], inplace=True)
-    df.to_csv('UserList/Registered.csv', index=False)
+    dfr = pd.read_csv('UserList/Registered.csv')
+    username = dfr.iloc[idx]['Name']
+    userid = dfr.iloc[idx]['ID']
+    usersec = dfr.iloc[idx]['Section']
+
+    if f'{username}${userid}${usersec}' in os.listdir('static/faces'):
+        shutil.rmtree(f'static/faces/{username}${userid}${usersec}')
+        train_model()
+
+    dfr.drop(dfr.index[idx], inplace=True)
+    dfr.to_csv('UserList/Registered.csv', index=False)
 
     names = []
     rolls = []
@@ -499,6 +518,7 @@ def pendinguserlist():
                                mess="Database is empty!")
 
 
+# ========== Flask Register a User ============
 @app.route('/registeruser', methods=['GET', 'POST'])
 def registeruser():
     if not g.user:
@@ -506,11 +526,15 @@ def registeruser():
 
     idx = int(request.form['index'])
 
-    pd.read_csv('UserList/Unregistered.csv').iloc[[idx]].to_csv('UserList/Registered.csv', encoding='utf-8', mode='a',
-                                                                index=False, header=False)
-    df = pd.read_csv('UserList/Unregistered.csv')
-    df.drop(df.index[idx], inplace=True)
-    df.to_csv('UserList/Unregistered.csv', index=False)
+    dfu = pd.read_csv('UserList/Unregistered.csv')
+    dfr = pd.read_csv('UserList/Registered.csv')
+
+    row = dfu.iloc[[idx]]
+    dfr = dfr.append(row, ignore_index=True)
+    dfr.to_csv('UserList/Registered.csv', index=False)
+
+    dfu.drop(dfu.index[idx], inplace=True)
+    dfu.to_csv('UserList/Unregistered.csv', index=False)
 
     names = []
     rolls = []
@@ -537,6 +561,7 @@ def registeruser():
                                mess="Database is empty!")
 
 
+# ========== Flask Delete a User from Pending List ============
 @app.route('/deletependinguser', methods=['GET', 'POST'])
 def deletependinguser():
     if not g.user:
@@ -544,9 +569,19 @@ def deletependinguser():
 
     idx = int(request.form['index'])
 
-    df = pd.read_csv('UserList/Unregistered.csv')
-    df.drop(df.index[idx], inplace=True)
-    df.to_csv('UserList/Unregistered.csv', index=False)
+    dfu = pd.read_csv('UserList/Unregistered.csv')
+    username = dfu.iloc[idx]['Name']
+    userid = dfu.iloc[idx]['ID']
+    usersec = dfu.iloc[idx]['Section']
+
+    print(f'{username}${userid}${usersec}')
+    print(os.listdir('static/faces'))
+    if f'{username}${userid}${usersec}' in os.listdir('static/faces'):
+        shutil.rmtree(f'static/faces/{username}${userid}${usersec}')
+        train_model()
+
+    dfu.drop(dfu.index[idx], inplace=True)
+    dfu.to_csv('UserList/Unregistered.csv', index=False)
 
     names = []
     rolls = []
@@ -599,4 +634,4 @@ def logout():
 
 # ======= Main Function =========
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)
