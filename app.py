@@ -104,6 +104,9 @@ def remAttendance():
         skip_header = True
         i = 0
         for row in csv_file:
+            if not row:
+                continue
+
             if skip_header:
                 skip_header = False
                 continue
