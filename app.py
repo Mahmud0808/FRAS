@@ -90,6 +90,18 @@ def train_model():
 # ======== Get Info From Attendance File =========
 def extract_attendance():
     df = pd.read_csv(f'Attendance/{datetoday}.csv')
+    dfu = pd.read_csv('UserList/Unregistered.csv')
+    dfr = pd.read_csv('UserList/Registered.csv')
+
+    roll = list(df['ID'])
+
+    for i in range(len(df)):
+        if str(roll[i]) not in dfu.values and str(roll[i]) not in dfr.values:
+            dfr.drop(dfr.index[df[df['ID'] == str(roll[i])].index[0]], inplace=True)
+            dfr.to_csv(f'Attendance/{datetoday}.csv', index=False)
+
+    df = pd.read_csv(f'Attendance/{datetoday}.csv')
+
     names = df['Name']
     rolls = df['ID']
     sec = df['Section']
@@ -97,10 +109,8 @@ def extract_attendance():
     dates = f'{datetoday}'
 
     reg = []
-    dfu = pd.read_csv('UserList/Unregistered.csv')
-    dfr = pd.read_csv('UserList/Registered.csv')
     roll = list(rolls)
-    for i in range(len(roll)):
+    for i in range(len(df)):
         if str(roll[i]) in list(map(str, dfu['ID'])):
             reg.append("Unregistered")
         elif str(roll[i]) in list(map(str, dfr['ID'])):
