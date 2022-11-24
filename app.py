@@ -101,9 +101,9 @@ def extract_attendance():
     dfr = pd.read_csv('UserList/Registered.csv')
     roll = list(rolls)
     for i in range(len(roll)):
-        if roll[i] in list(dfu['ID']):
+        if str(roll[i]) in list(map(str, dfu['ID'])):
             reg.append("Unregistered")
-        elif roll[i] in list(dfr['ID']):
+        elif str(roll[i]) in list(map(str, dfr['ID'])):
             reg.append("Registered")
 
     l = len(df)
@@ -118,7 +118,7 @@ def add_attendance(name):
     current_time = datetime.now().strftime("%I:%M %p")
 
     df = pd.read_csv(f'Attendance/{datetoday}.csv')
-    if userid not in list(df['ID']):
+    if str(userid) not in list(map(str, df['ID'])):
         with open(f'Attendance/{datetoday}.csv', 'a') as f:
             f.write(f'\n{username},{userid},{usersection},{current_time}')
 
@@ -170,6 +170,7 @@ def attendancebtn():
             cv2.putText(frame, 'Press Esc to close', (30, 90), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 127, 255), 2,
                         cv2.LINE_AA)
         cv2.imshow('Attendance', frame)
+        cv2.setWindowProperty('Attendance', cv2.WND_PROP_TOPMOST, 1)
         if cv2.waitKey(1) == 27:
             break
 
@@ -211,11 +212,11 @@ def adduserbtn():
     dfu = pd.read_csv('UserList/Unregistered.csv')
     dfr = pd.read_csv('UserList/Registered.csv')
 
-    if newuserid not in list(dfu['ID']) and newuserid not in list(dfr['ID']):
+    if str(newuserid) not in list(map(str, dfu['ID'])) and str(newuserid) not in list(map(str, dfr['ID'])):
         with open('UserList/Unregistered.csv', 'a') as f:
             f.write(f'\n{newusername},{newuserid},{newusersection}')
     else:
-        if newuserid in list(dfu['ID']):
+        if str(newuserid) in list(map(str, dfu['ID'])):
             return render_template('adduser.html', mess='You are already in pending list.')
         else:
             return render_template('adduser.html', mess='You are already a registered user.')
@@ -235,7 +236,8 @@ def adduserbtn():
             j += 1
         if j == 500:
             break
-        cv2.imshow('Adding New User', frame)
+        cv2.imshow('Collecting Face Data', frame)
+        cv2.setWindowProperty('Collecting Face Data', cv2.WND_PROP_TOPMOST, 1)
         if cv2.waitKey(1) == 27:
             break
 
@@ -299,9 +301,9 @@ def attendancelistdate():
             times.append(row[3])
             dates.append(f'{day}-{month}-{year}')
 
-            if row[1] in list(dfu['ID']):
+            if str(row[1]) in list(map(str, dfu['ID'])):
                 reg.append("Unregistered")
-            elif row[1] in list(dfr['ID']):
+            elif str(row[1]) in list(map(str, dfr['ID'])):
                 reg.append("Registered")
             else:
                 reg.append("x")
@@ -349,9 +351,9 @@ def attendancelistid():
                 times.append(row[3])
                 dates.append(file.replace('.csv', ''))
 
-                if row[1] in list(dfu['ID']):
+                if str(row[1]) in list(map(str, dfu['ID'])):
                     reg.append("Unregistered")
-                elif row[1] in list(dfr['ID']):
+                elif str(row[1]) in list(map(str, dfr['ID'])):
                     reg.append("Registered")
                 else:
                     reg.append("x")
