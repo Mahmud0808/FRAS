@@ -1,8 +1,7 @@
 # Facial Recognition Attendance System GUI
 
 <p align="center">
-<a href="https://ibb.co/M994ZTj" target=”_blank”><img src="https://i.ibb.co/TrrSYXn/Screenshot-2022-11-29-223142.png" alt="Screenshot-2022-11-29-223142" border="0" style="width: 48%; margin: 32px;"></a>
-<a href="https://ibb.co/GVgk8Ww" target=”_blank”><img src="https://i.ibb.co/zSKbBXc/Screenshot-2022-11-29-223214.png" alt="Screenshot-2022-11-29-223214" border="0" style="width: 48%; margin: 32px;"></a>
+<a href="https://postimg.cc/Z0CpsdxY" target="_blank"><img src="https://i.postimg.cc/BZCp658F/Screenshot-2022-11-29-223142.png" alt="Screenshot-2022-11-29-223142" style="width: 48%; margin: 32px;"/></a> <a href="https://postimg.cc/hh6xkt2L" target="_blank"><img src="https://i.postimg.cc/pXXZn986/Screenshot-2022-11-29-223214.png" alt="Screenshot-2022-11-29-223214" style="width: 48%; margin: 32px;"/></a>
 </p>
 
 Smart attendance system using facial recognition with GUI.
