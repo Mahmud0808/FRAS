@@ -1,5 +1,10 @@
 # Facial Recognition Attendance System GUI
 
+<p align="center">
+<a href="https://ibb.co/M994ZTj" target=”_blank”><img src="https://i.ibb.co/TrrSYXn/Screenshot-2022-11-29-223142.png" alt="Screenshot-2022-11-29-223142" border="0" style="width: 48%; margin: 32px;"></a>
+<a href="https://ibb.co/GVgk8Ww" target=”_blank”><img src="https://i.ibb.co/zSKbBXc/Screenshot-2022-11-29-223214.png" alt="Screenshot-2022-11-29-223214" border="0" style="width: 48%; margin: 32px;"></a>
+</p>
+
 Smart attendance system using facial recognition with GUI.
 
 ## Features
@@ -50,6 +55,8 @@ joblib
 
 ### Containing Files & Folders
 
+Missing files and folders will be generated automatically.
+
 * `/Attendance` - This folder will contain the generated excel sheets of attendances.
 * `/static/face_recognition_model.pkl` - This file will store the trained face recognition model.
 * `/static/faces` - This is the folder where we will keep all the pictures of students.
@@ -62,3 +69,12 @@ joblib
 #### How to Run
 
 Just run the `app.py` file and voila!
+
+#### Default Username and Password for Admin
+
+Username : `admin`<br>
+Password : `12345`
+
+#### Show Debugger Instead of Error Page
+
+just replace `app.run(debug=False)` in app.py with `app.run(debug=True)`
