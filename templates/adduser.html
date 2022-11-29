@@ -39,6 +39,12 @@ tr:nth-child(even) {
 	background-color: #DAE1FF;
 }
 
+::placeholder {
+   text-align: center;
+   font-size: 22px;
+}
+
+
 
 </style>
 
@@ -55,38 +61,32 @@ tr:nth-child(even) {
 
 <body>
 <div class='mt-3 text-center'>
-    <h1 style="width: auto; margin: auto; color: #1B1B1F; padding: 11px; font-size: 44px; font-weight: bold;"><a href="http://127.0.0.1:5000/" style="outline: none !important; text-decoration: none !important; color: #1B1B1F;">Facial Recognition Attendance System</a></h1></div>
+    <h1 style="width: auto; margin: auto; color: #1B1B1F; padding: 11px; font-size: 44px; font-weight: bold;"><a
+            href="http://127.0.0.1:5000/"
+            style="outline: none !important; text-decoration: none !important; color: #1B1B1F;">Facial Recognition
+        Attendance System</a></h1></div>
 <div class='mt-3 text-center'>
     <div class="text-center" style="padding: 20px; margin: 60px 20px 20px 20px;">
-        <div style="max-width: 45%; border-radius: 24px; padding: 0 0 40px 0; background-color: #F4F3FB; margin: 0px auto;">
-            <form action='/adduserbtn' method="POST" enctype="multipart/form-data">
-                <h2 style="vertical-align: center; border-radius: 24px 24px 0px 0px; background-color: #E7DEFF; color: #1F0060; padding: 18px 10px 18px 10px;">
-                    Add New User <i class="material-icons">person_add</i></h2>
-                <label style="font-size: 24px; margin-bottom: 6px; margin-top: 6px;"><span
-                        style="color: #201A19;">Name</span></label>
+        <div style="max-width: 40%; border-radius: 24px; padding: 0 0 40px 0; background-color: #F4F3FB; margin: 0px auto;">
+            <h2 style="vertical-align: center; border-radius: 24px 24px 0px 0px; background-color: #E7DEFF; color: #1F0060; padding: 18px 10px 18px 10px;">
+                Add New User <i class="material-icons">person_add</i></h2>
+            <form action='/adduserbtn' method="POST" enctype="multipart/form-data" style="max-width: 80%; margin: auto;">
                 <br>
-                <input type="text" id="newusername" name='newusername'
-                       style="width: 70%; font-size: 16px; margin: 8px 0 10px 0; border: 1px solid #797475; border-radius: 24px; padding: 12px 16px 12px 16px;"
+                <input type="text" id="newusername" name='newusername' placeholder="Username"
+                       style="width: 70%; font-size: 16px; margin: 8px 0 10px 0; border: 1px solid #797475; border-radius: 12px; padding: 12px 16px 12px 16px;"
                        required>
                 <br>
-                <label style="font-size: 24px; margin-bottom: 6px;"><span style="color: #201A19;">User ID</span></label>
-                <br>
-                <input type="text" id="newusereid" name='newuserid'
-                       style="width: 70%; font-size: 16px; margin: 8px 0 10px 0; border: 1px solid #797475; border-radius: 24px; padding: 12px 16px 12px 16px;"
+                <input type="text" id="newusereid" name='newuserid' placeholder="User ID"
+                       style="width: 70%; font-size: 16px; margin: 8px 0 10px 0; border: 1px solid #797475; border-radius: 12px; padding: 12px 16px 12px 16px;"
+                       required>
+                <input type="hidden" id="newusersection" name='newusersection' value="None"
                        required>
                 <br>
-                <label style="font-size: 24px; margin-bottom: 6px;"><span style="color: #201A19;">Section</span></label>
-                <br>
-                <input type="text" id="newusersection" name='newusersection'
-                       style="width: 70%; font-size: 16px; margin: 8px 0 10px 0; border: 1px solid #797475; border-radius: 24px; padding: 12px 16px 12px 16px;"
-                       required>
-                <br>
-                <button style="letter-spacing: 4px; background-color: #3C5BA9 !important; width: 70%; margin-top: 20px; font-size: 22px; padding: 10px; border-radius: 24px; border: 0px;"
-                        type='submit' class='btn btn-dark'>Submit New User
+                <button style="letter-spacing: 4px; background-color: #3C5BA9 !important; width: 70%; margin-top: 20px; font-size: 22px; padding: 10px; border-radius: 12px; border: 0px;"
+                        type='submit' class='btn btn-dark'>Submit
                 </button>
-                <br>
-                {% if mess %} <h5 style="padding: 25px; color: #201A19;">{{ mess }}</h5> {% endif %}
             </form>
+            {% if mess %}<br> <h5 style="padding: 25px; color: #201A19;">{{ mess }}</h5> {% endif %}
         </div>
     </div>
 </body>

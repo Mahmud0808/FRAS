@@ -40,6 +40,10 @@ tr:nth-child(even) {
 }
 
 
+
+
+
+
 </style>
 
 <head>
@@ -63,14 +67,14 @@ tr:nth-child(even) {
     <div style="max-width: 60%; border-radius: 24px; padding: 0 0 20px 0; background-color: #F4F3FB; margin: 0px auto;">
         <h2 style="border-radius: 24px 24px 0px 0px; background-color: #E7DEFF; color: #1F0060; padding: 18px 10px 18px 10px;">
             Pending User List <i class="material-icons">access_time_filled</i></h2>
-        {% if mess %} <p class="text-center" style="color: #1F0060; font-size: 20px; margin-top: 20px;">{{ mess }}</p> {% endif %}
+        {% if mess %} <p class="text-center" style="color: #1F0060; font-size: 20px; margin-top: 20px;">{{ mess }}</p>
+        {% endif %}
         {% if l >= 1 %}
         <table style="background-color: white; margin: 40px auto 20px auto;">
             <tr>
                 <td width="10%"><b>No.</b></td>
                 <td><b>Name</b></td>
                 <td><b>ID</b></td>
-                <td><b>Section</b></td>
                 <td><b>Action</b></td>
             </tr>
             {% if l %} {% for i in range(l) %}
@@ -78,14 +82,31 @@ tr:nth-child(even) {
                 <td width="10%">{{ i+1 }}</td>
                 <td>{{ names[i] }}</td>
                 <td>{{ rolls[i] }}</td>
-                <td>{{ sec[i] }}</td>
                 <td>
-                    <form style="display: inline-block;" action='/registeruser' method="POST" enctype="multipart/form-data">
+                    <form style="display: inline-block;" action='/registeruser' method="POST"
+                          enctype="multipart/form-data">
                         <input type="hidden" name="index" value="{{ i }}"/>
+                        <select name="section" id="section"
+                                style="padding: 6px 12px; border-radius: 6px; border: 1px solid #ccc; margin: 4px 0;"
+                                required>
+                            <option value="">Section</option>
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="C">C</option>
+                            <option value="D">D</option>
+                            <option value="E">E</option>
+                            <option value="F">F</option>
+                            <option value="G">G</option>
+                            <option value="H">H</option>
+                            <option value="I">I</option>
+                            <option value="J">J</option>
+                            <option value="K">K</option>
+                        </select>
                         <input type="submit" value="Register"
                                style="padding: 4px 12px; border: none; border-radius: 6px; background-color: #3C5BA9; color: #fff; margin: 4px 0;"/>
                     </form>
-                    <form style="display: inline-block;" action='/deletependinguser' method="POST" enctype="multipart/form-data">
+                    <form style="display: inline-block;" action='/deletependinguser' method="POST"
+                          enctype="multipart/form-data">
                         <input type="hidden" name="index" value="{{ i }}"/>
                         <input type="submit" value="Remove"
                                style="padding: 4px 12px; border: none; border-radius: 6px; background-color: #f44336; color: #fff; margin: 4px 0;"/>

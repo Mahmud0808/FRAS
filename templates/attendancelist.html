@@ -38,6 +38,7 @@ th {
 tr:nth-child(even) {
 	background-color: #DAE1FF;
 }
+
 </style>
 
 <head>
@@ -53,30 +54,30 @@ tr:nth-child(even) {
 
 <body>
 <div class='mt-3 text-center'>
-    <h1 style="width: auto; margin: auto; color: #1B1B1F; padding: 11px; font-size: 44px; font-weight: bold;"><a href="http://127.0.0.1:5000/" style="outline: none !important; text-decoration: none !important; color: #1B1B1F;">Facial Recognition Attendance System</a></h1></div>
+    <h1 style="width: auto; margin: auto; color: #1B1B1F; padding: 11px; font-size: 44px; font-weight: bold;"><a
+            href="http://127.0.0.1:5000/"
+            style="outline: none !important; text-decoration: none !important; color: #1B1B1F;">Facial Recognition
+        Attendance System</a></h1></div>
 <div class="text-center" style="padding: 20px; margin: 60px 20px 20px 20px;">
     <div style="max-width: 80%; border-radius: 24px; padding: 0 0 20px 0; background-color: #F4F3FB; margin: 0px auto;">
         <h2 style="border-radius: 24px 24px 0px 0px; background-color: #E7DEFF; color: #1F0060; padding: 18px 10px 18px 10px;">
             Attendance List <i class="material-icons">assignment</i></h2>
-
         <form action='/attendancelistdate' method="POST" enctype="multipart/form-data" style="margin-top: 40px;">
-            <input style="letter-spacing: 4px; font-size: 22px; padding: 10px; border-radius: 12px; border: 1px solid #ccc;"
+            <input style="font-size: 22px; padding: 10px; border-radius: 12px; border: 1px solid #ccc; min-width: 280px;"
                    type="date" id="date" name="date" required>
-            <button style="letter-spacing: 4px; background-color: #3C5BA9 !important; font-size: 22px; padding: 10px 20px; border-radius: 12px; border: 0px; margin-top: -8px;"
+            <button style="background-color: #3C5BA9 !important; font-size: 22px; padding: 10px 20px; border-radius: 12px; border: 0px; margin-top: -8px; min-width: 200px;"
                     type='submit' class='btn btn-dark'>Search by Date
             </button>
         </form>
-        <br>
         <form action='/attendancelistid' method="POST" enctype="multipart/form-data" style="margin: 12px 0;">
-            <input style="letter-spacing: 4px; font-size: 22px; padding: 10px; border-radius: 12px; border: 1px solid #ccc;"
+            <input style="font-size: 22px; padding: 10px; border-radius: 12px; border: 1px solid #ccc; min-width: 280px;"
                    type="text" id="id" name="id" required>
-            <button style="letter-spacing: 4px; background-color: #3C5BA9 !important; font-size: 22px; padding: 10px 20px; border-radius: 12px; border: 0px; margin-top: -8px;"
+            <button style="background-color: #3C5BA9 !important; font-size: 22px; padding: 10px 20px; border-radius: 12px; border: 0px; margin-top: -8px; min-width: 200px;"
                     type='submit' class='btn btn-dark'>Search by ID
             </button>
-            {% if mess %} <h5 style="padding: 25px; color: #201A19;">{{ mess }}</h5> {% endif %}
         </form>
-
-        {% if l >= 1 %}
+        {% if mess %} <h5 style="padding-top: 25px; color: #201A19;">{{ mess }}</h5> {% endif %}
+        {% if l %}
         <table style="background-color: white; margin: 40px auto 20px auto;">
             <tr>
                 <td width="5%"><b>No.</b></td>
@@ -87,7 +88,7 @@ tr:nth-child(even) {
                 <td><b>Date</b></td>
                 <td><b>Reg. Status</b></td>
             </tr>
-            {% if l %} {% for i in range(l) %}
+            {% for i in range(l) %}
             <tr>
                 <td width="5%">{{ i+1 }}</td>
                 <td>{{ names[i] }}</td>
@@ -97,7 +98,7 @@ tr:nth-child(even) {
                 <td>{{ dates[i] }}</td>
                 <td>{{ reg[i] }}</td>
             </tr>
-            {% endfor %} {% endif %}
+            {% endfor %}
         </table>
         {% endif %}
     </div>
