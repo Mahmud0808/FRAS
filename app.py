@@ -442,7 +442,7 @@ def attendancelistid():
                                mess="Nothing Found!")
 
 
-# ========== Flask Registered User List ============
+# ========== Flask Registered Users ============
 @app.route('/registereduserlist')
 def registereduserlist():
     if not g.user:
@@ -574,7 +574,7 @@ def deleteregistereduser():
                                mess="Database is empty!")
 
 
-# ========== Flask Unregistered User List ============
+# ========== Flask Unregistered Users ============
 @app.route('/unregistereduserlist')
 def unregistereduserlist():
     if not g.user:
