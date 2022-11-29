@@ -23,6 +23,15 @@ def http_error_handler(error):
     return render_template('error.html')
 
 
+# ======= Flask Assign Admin ========
+@app.before_request
+def before_request():
+    g.user = None
+
+    if 'admin' in session:
+        g.user = session['admin']
+
+
 # ======== Current Date & Time =========
 datetoday = date.today().strftime("%d-%m-%Y")
 datetoday2 = date.today().strftime("%d %B %Y")
@@ -47,6 +56,23 @@ if 'Registered.csv' not in os.listdir('UserList'):
 if 'Unregistered.csv' not in os.listdir('UserList'):
     with open('UserList/Unregistered.csv', 'w') as f:
         f.write('Name,ID,Section')
+
+
+# ======= Remove Empty Rows From Excel Sheet =======
+def remove_empty_cells():
+    dfr = pd.read_csv('UserList/Registered.csv')
+    dfu = pd.read_csv('UserList/Unregistered.csv')
+
+    dfr.dropna(inplace=True)
+    dfr.to_csv('UserList/Registered.csv', index=False)
+    dfu.dropna(inplace=True)
+    dfu.to_csv('UserList/Unregistered.csv', index=False)
+
+    for file in os.listdir('Attendance'):
+        csv = pd.read_csv(f'Attendance/{file}')
+
+        csv.dropna(inplace=True)
+        csv.to_csv(f'Attendance/{file}', index=False)
 
 
 # ======= Total Registered Users ========
@@ -117,6 +143,8 @@ def remAttendance():
 
             i += 1
 
+    remove_empty_cells()
+
 
 # ======== Get Info From Attendance File =========
 def extract_attendance():
@@ -167,6 +195,7 @@ def home():
 # ======== Flask Take Attendance ==========
 @app.route('/attendance')
 def attendance():
+    remove_empty_cells()
     names, rolls, sec, times, dates, reg, l = extract_attendance()
     return render_template('attendance.html', names=names, rolls=rolls, sec=sec, times=times, l=l,
                            datetoday2=datetoday2)
@@ -195,7 +224,8 @@ def attendancebtn():
             identified_person_name = identified_person.split('$')[0]
             identified_person_id = identified_person.split('$')[1]
             add_attendance(identified_person)
-            cv2.putText(frame, f'Name: {identified_person_name}', (30, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 20), 2,
+            cv2.putText(frame, f'Name: {identified_person_name}', (30, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 20),
+                        2,
                         cv2.LINE_AA)
             cv2.putText(frame, f'ID: {identified_person_id}', (30, 60), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 20), 2,
                         cv2.LINE_AA)
@@ -217,14 +247,6 @@ def attendancebtn():
 @app.route('/adduser')
 def adduser():
     return render_template('adduser.html')
-
-
-@app.before_request
-def before_request():
-    g.user = None
-
-    if 'admin' in session:
-        g.user = session['admin']
 
 
 @app.route('/adduserbtn', methods=['GET', 'POST'])
@@ -249,7 +271,7 @@ def adduserbtn():
             f.write(f'\n{newusername},{newuserid},{newusersection}')
     else:
         if str(newuserid) in list(map(str, dfu['ID'])):
-            return render_template('adduser.html', mess='You are already in pending list.')
+            return render_template('adduser.html', mess='You are already in unregistered list.')
         else:
             return render_template('adduser.html', mess='You are already a registered user.')
 
@@ -276,8 +298,19 @@ def adduserbtn():
     cap.release()
     cv2.destroyAllWindows()
     print('Training Model')
-    train_model()
-    return render_template('adduser.html', mess='Waiting for admin aproval. Currently you are listed as Unregistered.')
+
+    if len(os.listdir(userimagefolder)) == 0:
+        dfu = pd.read_csv('UserList/Unregistered.csv')
+        dfu.drop(dfu.index[-1], inplace=True)
+        dfu.to_csv('UserList/Unregistered.csv', index=False)
+
+        remove_empty_cells()
+
+        shutil.rmtree(userimagefolder)
+        return render_template('adduser.html', mess='Failed to Capture Photos.')
+    else:
+        train_model()
+        return render_template('adduser.html', mess='Waiting for admin aproval. Currently you are listed as Unregistered.')
 
 
 # ========== Flask Attendance List ============
@@ -285,6 +318,8 @@ def adduserbtn():
 def attendancelist():
     if not g.user:
         return render_template('login.html')
+
+    remove_empty_cells()
 
     names, rolls, sec, times, dates, reg, l = extract_attendance()
     return render_template('attendancelist.html', names=names, rolls=rolls, sec=sec, times=times, dates=dates, reg=reg,
@@ -408,6 +443,8 @@ def registereduserlist():
     if not g.user:
         return render_template('login.html')
 
+    remove_empty_cells()
+
     names = []
     rolls = []
     sec = []
@@ -451,6 +488,8 @@ def unregisteruser():
 
     dfr.drop(dfr.index[idx], inplace=True)
     dfr.to_csv('UserList/Registered.csv', index=False)
+
+    remove_empty_cells()
 
     names = []
     rolls = []
@@ -497,6 +536,8 @@ def deleteregistereduser():
     dfr.drop(dfr.index[idx], inplace=True)
     dfr.to_csv('UserList/Registered.csv', index=False)
 
+    remove_empty_cells()
+
     names = []
     rolls = []
     sec = []
@@ -524,11 +565,13 @@ def deleteregistereduser():
                                mess="Database is empty!")
 
 
-# ========== Flask Pending User List ============
-@app.route('/pendinguserlist')
-def pendinguserlist():
+# ========== Flask Unregistered User List ============
+@app.route('/unregistereduserlist')
+def unregistereduserlist():
     if not g.user:
         return render_template('login.html')
+
+    remove_empty_cells()
 
     names = []
     rolls = []
@@ -548,10 +591,10 @@ def pendinguserlist():
         l += 1
 
     if l != 0:
-        return render_template('pendinguserlist.html', names=names, rolls=rolls, sec=sec, l=l,
-                               mess=f'Number of Pending Students: {l}')
+        return render_template('unregistereduserlist.html', names=names, rolls=rolls, sec=sec, l=l,
+                               mess=f'Number of Unregistered Students: {l}')
     else:
-        return render_template('pendinguserlist.html', names=names, rolls=rolls, sec=sec, l=0,
+        return render_template('unregistereduserlist.html', names=names, rolls=rolls, sec=sec, l=0,
                                mess="Database is empty!")
 
 
@@ -575,6 +618,8 @@ def registeruser():
     dfu.drop(dfu.index[idx], inplace=True)
     dfu.to_csv('UserList/Unregistered.csv', index=False)
 
+    remove_empty_cells()
+
     names = []
     rolls = []
     sec = []
@@ -593,16 +638,16 @@ def registeruser():
         l += 1
 
     if l != 0:
-        return render_template('pendinguserlist.html', names=names, rolls=rolls, sec=sec, l=l,
-                               mess=f'Number of Pending Students: {l}')
+        return render_template('unregistereduserlist.html', names=names, rolls=rolls, sec=sec, l=l,
+                               mess=f'Number of Unregistered Students: {l}')
     else:
-        return render_template('pendinguserlist.html', names=names, rolls=rolls, sec=sec, l=0,
+        return render_template('unregistereduserlist.html', names=names, rolls=rolls, sec=sec, l=0,
                                mess="Database is empty!")
 
 
-# ========== Flask Delete a User from Pending List ============
-@app.route('/deletependinguser', methods=['GET', 'POST'])
-def deletependinguser():
+# ========== Flask Delete a User from Unregistered List ============
+@app.route('/deleteunregistereduser', methods=['GET', 'POST'])
+def deleteunregistereduser():
     if not g.user:
         return render_template('login.html')
 
@@ -621,6 +666,8 @@ def deletependinguser():
 
     dfu.drop(dfu.index[idx], inplace=True)
     dfu.to_csv('UserList/Unregistered.csv', index=False)
+
+    remove_empty_cells()
 
     names = []
     rolls = []
@@ -642,10 +689,10 @@ def deletependinguser():
     remAttendance()
 
     if l != 0:
-        return render_template('pendinguserlist.html', names=names, rolls=rolls, sec=sec, l=l,
-                               mess=f'Number of Pending Students: {l}')
+        return render_template('unregistereduserlist.html', names=names, rolls=rolls, sec=sec, l=l,
+                               mess=f'Number of Unregistered Students: {l}')
     else:
-        return render_template('pendinguserlist.html', names=names, rolls=rolls, sec=sec, l=0,
+        return render_template('unregistereduserlist.html', names=names, rolls=rolls, sec=sec, l=0,
                                mess="Database is empty!")
 
 
