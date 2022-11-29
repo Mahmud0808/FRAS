@@ -176,7 +176,7 @@ def attendance():
 def attendancebtn():
     if 'face_recognition_model.pkl' not in os.listdir('static'):
         return render_template('attendance.html', datetoday2=datetoday2,
-                               mess='Database is empty, add yourself in user list first.')
+                               mess='Database is empty! Register yourself first.')
 
     cap = cv2.VideoCapture(0)
     if cap is None or not cap.isOpened():
@@ -445,6 +445,7 @@ def unregisteruser():
     dfr = pd.read_csv('UserList/Registered.csv')
 
     row = dfr.iloc[[idx]]
+    row['Section'] = row['Section'].replace(to_replace='.', value='None', regex=True)
     dfu = dfu.append(row, ignore_index=True)
     dfu.to_csv('UserList/Unregistered.csv', index=False)
 
@@ -561,11 +562,13 @@ def registeruser():
         return render_template('login.html')
 
     idx = int(request.form['index'])
+    sec = request.form['section']
 
     dfu = pd.read_csv('UserList/Unregistered.csv')
     dfr = pd.read_csv('UserList/Registered.csv')
 
     row = dfu.iloc[[idx]]
+    row['Section'] = row['Section'].replace(['None'], sec)
     dfr = dfr.append(row, ignore_index=True)
     dfr.to_csv('UserList/Registered.csv', index=False)
 
