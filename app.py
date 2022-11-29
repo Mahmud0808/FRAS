@@ -195,6 +195,10 @@ def home():
 # ======== Flask Take Attendance ==========
 @app.route('/attendance')
 def attendance():
+    if f'{datetoday}.csv' not in os.listdir('Attendance'):
+        with open(f'Attendance/{datetoday}.csv', 'w') as f:
+            f.write('Name,ID,Section,Time')
+
     remove_empty_cells()
     names, rolls, sec, times, dates, reg, l = extract_attendance()
     return render_template('attendance.html', names=names, rolls=rolls, sec=sec, times=times, l=l,
@@ -310,7 +314,8 @@ def adduserbtn():
         return render_template('adduser.html', mess='Failed to Capture Photos.')
     else:
         train_model()
-        return render_template('adduser.html', mess='Waiting for admin aproval. Currently you are listed as Unregistered.')
+        return render_template('adduser.html',
+                               mess='Waiting for admin aproval. Currently you are listed as Unregistered.')
 
 
 # ========== Flask Attendance List ============
@@ -482,7 +487,11 @@ def unregisteruser():
     dfr = pd.read_csv('UserList/Registered.csv')
 
     row = dfr.iloc[[idx]]
+    shutil.move('static/faces/' + dfr.iloc[idx]['Name'] + '$' + dfr.iloc[idx]['ID'] + '$' + dfr.iloc[idx]['Section'],
+                'static/faces/' + dfr.iloc[idx]['Name'] + '$' + dfr.iloc[idx]['ID'] + '$None')
+    train_model()
     row['Section'] = row['Section'].replace(to_replace='.', value='None', regex=True)
+
     dfu = dfu.append(row, ignore_index=True)
     dfu.to_csv('UserList/Unregistered.csv', index=False)
 
@@ -611,6 +620,10 @@ def registeruser():
     dfr = pd.read_csv('UserList/Registered.csv')
 
     row = dfu.iloc[[idx]]
+
+    shutil.move('static/faces/' + dfu.iloc[idx]['Name'] + '$' + dfu.iloc[idx]['ID'] + '$None',
+                'static/faces/' + dfu.iloc[idx]['Name'] + '$' + dfu.iloc[idx]['ID'] + '$' + sec)
+    train_model()
     row['Section'] = row['Section'].replace(['None'], sec)
     dfr = dfr.append(row, ignore_index=True)
     dfr.to_csv('UserList/Registered.csv', index=False)
@@ -722,4 +735,4 @@ def logout():
 
 # ======= Main Function =========
 if __name__ == '__main__':
-    app.run(debug=False)
+    app.run(debug=True)

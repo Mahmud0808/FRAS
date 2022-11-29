@@ -39,6 +39,8 @@ tr:nth-child(even) {
 	background-color: #DAE1FF;
 }
 
+
+
 </style>
 
 <head>
@@ -96,7 +98,7 @@ tr:nth-child(even) {
                 <td>{{ sec[i] }}</td>
                 <td>{{ times[i] }}</td>
                 <td>{{ dates[i] }}</td>
-                <td>{{ reg[i] }}</td>
+                <td>{% if sec[i] == "None" %} Unregistered {% else %} Registered {% endif %}</td>
             </tr>
             {% endfor %}
         </table>
