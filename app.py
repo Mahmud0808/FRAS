@@ -83,7 +83,7 @@ def totalreg():
 # ======= Get Face From Image =========
 def extract_faces(img):
     gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    face_points = face_detector.detectMultiScale(gray_img, 1.3, 5)
+    face_points = face_detector.detectMultiScale(gray_img, 1.5, 7)
     return face_points
 
 
@@ -112,7 +112,7 @@ def train_model():
             labels.append(user)
 
     faces = np.array(faces)
-    knn = KNeighborsClassifier(n_neighbors=5)
+    knn = KNeighborsClassifier(n_neighbors=7)
     knn.fit(faces, labels)
     joblib.dump(knn, 'static/face_recognition_model.pkl')
 
@@ -207,9 +207,12 @@ def attendance():
 
 @app.route('/attendancebtn', methods=['GET'])
 def attendancebtn():
-    if 'face_recognition_model.pkl' not in os.listdir('static'):
+    if len(os.listdir('static/faces')) == 0:
         return render_template('attendance.html', datetoday2=datetoday2,
                                mess='Database is empty! Register yourself first.')
+
+    if 'face_recognition_model.pkl' not in os.listdir('static'):
+        train_model()
 
     cap = cv2.VideoCapture(0)
     if cap is None or not cap.isOpened():
@@ -218,6 +221,8 @@ def attendancebtn():
                                totalreg=totalreg(), datetoday2=datetoday2, mess='Camera not available.')
 
     ret = True
+    j = 1
+    flag = -1
     while ret:
         ret, frame = cap.read()
         if extract_faces(frame) != ():
@@ -227,7 +232,14 @@ def attendancebtn():
             identified_person = identify_face(face.reshape(1, -1))[0]
             identified_person_name = identified_person.split('$')[0]
             identified_person_id = identified_person.split('$')[1]
-            add_attendance(identified_person)
+
+            if flag != identified_person:
+                j = 1
+                flag = identified_person
+
+            if j % 20 == 0:
+                add_attendance(identified_person)
+
             cv2.putText(frame, f'Name: {identified_person_name}', (30, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 20),
                         2,
                         cv2.LINE_AA)
@@ -235,6 +247,11 @@ def attendancebtn():
                         cv2.LINE_AA)
             cv2.putText(frame, 'Press Esc to close', (30, 90), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 127, 255), 2,
                         cv2.LINE_AA)
+            j += 1
+        else:
+            j = 1
+            flag = -1
+
         cv2.imshow('Attendance', frame)
         cv2.setWindowProperty('Attendance', cv2.WND_PROP_TOPMOST, 1)
         if cv2.waitKey(1) == 27:
@@ -735,4 +752,4 @@ def logout():
 
 # ======= Main Function =========
 if __name__ == '__main__':
-    app.run(debug=False)
+    app.run(debug=True)
