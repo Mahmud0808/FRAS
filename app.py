@@ -309,7 +309,7 @@ def adduserbtn():
                 cv2.imwrite(userimagefolder + '/' + name, frame[y:y + h, x:x + w])
                 i += 1
             j += 1
-        if j == 500:
+        if i == 50:
             break
         cv2.imshow('Collecting Face Data', frame)
         cv2.setWindowProperty('Collecting Face Data', cv2.WND_PROP_TOPMOST, 1)
