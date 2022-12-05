@@ -301,7 +301,6 @@ def adduserbtn():
         ignore, frame = cap.read()
         faces = extract_faces(frame)
         for (x, y, w, h) in faces:
-            cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 20), 2)
             cv2.putText(frame, f'Images Captured: {i}/50', (30, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 20), 2,
                         cv2.LINE_AA)
             if j % 10 == 0:
@@ -318,7 +317,6 @@ def adduserbtn():
 
     cap.release()
     cv2.destroyAllWindows()
-    print('Training Model')
 
     if len(os.listdir(userimagefolder)) == 0:
         dfu = pd.read_csv('UserList/Unregistered.csv')
