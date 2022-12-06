@@ -178,9 +178,28 @@ def add_attendance(name):
     current_time = datetime.now().strftime("%I:%M %p")
 
     df = pd.read_csv(f'Attendance/{datetoday}.csv')
+
     if str(userid) not in list(map(str, df['ID'])):
         with open(f'Attendance/{datetoday}.csv', 'a') as f:
             f.write(f'\n{username},{userid},{usersection},{current_time}')
+    else:
+        idx = -1
+        csv_file = csv.reader(open('Attendance/' + datetoday + '.csv', "r"), delimiter=",")
+        i = -1
+
+        for row in csv_file:
+            if str(row[1]) == str(userid):
+                idx = i
+            i += 1
+
+        start_time = datetime.strptime(df.iloc[idx]['Time'], "%I:%M %p")
+        end_time = datetime.strptime(current_time, "%I:%M %p")
+        delta = end_time - start_time
+        minutes = delta.total_seconds() / 60
+
+        if minutes > 40:
+            with open(f'Attendance/{datetoday}.csv', 'a') as f:
+                f.write(f'\n{username},{userid},{usersection},{current_time}')
 
 
 # ======= Flask Home Page =========
