@@ -177,6 +177,7 @@ def add_attendance(name):
     usersection = name.split('$')[2]
     current_time = datetime.now().strftime("%I:%M %p")
 
+    remove_empty_cells()
     df = pd.read_csv(f'Attendance/{datetoday}.csv')
 
     if str(userid) not in list(map(str, df['ID'])):
@@ -271,8 +272,9 @@ def attendancebtn():
             j = 1
             flag = -1
 
-        cv2.imshow('Attendance', frame)
+        cv2.namedWindow('Attendance', cv2.WINDOW_NORMAL)
         cv2.setWindowProperty('Attendance', cv2.WND_PROP_TOPMOST, 1)
+        cv2.imshow('Attendance', frame)
         if cv2.waitKey(1) == 27:
             break
 
@@ -303,6 +305,7 @@ def adduserbtn():
     if not os.path.isdir(userimagefolder):
         os.makedirs(userimagefolder)
 
+    remove_empty_cells()
     dfu = pd.read_csv('UserList/Unregistered.csv')
     dfr = pd.read_csv('UserList/Registered.csv')
 
@@ -329,8 +332,10 @@ def adduserbtn():
             j += 1
         if i == 50:
             break
-        cv2.imshow('Collecting Face Data', frame)
+
+        cv2.namedWindow('Collecting Face Data', cv2.WINDOW_NORMAL)
         cv2.setWindowProperty('Collecting Face Data', cv2.WND_PROP_TOPMOST, 1)
+        cv2.imshow('Collecting Face Data', frame)
         if cv2.waitKey(1) == 27:
             break
 
@@ -517,6 +522,7 @@ def unregisteruser():
 
     idx = int(request.form['index'])
 
+    remove_empty_cells()
     dfu = pd.read_csv('UserList/Unregistered.csv')
     dfr = pd.read_csv('UserList/Registered.csv')
 
@@ -567,6 +573,7 @@ def deleteregistereduser():
 
     idx = int(request.form['index'])
 
+    remove_empty_cells()
     dfr = pd.read_csv('UserList/Registered.csv')
     username = dfr.iloc[idx]['Name']
     userid = dfr.iloc[idx]['ID']
@@ -650,6 +657,7 @@ def registeruser():
     idx = int(request.form['index'])
     sec = request.form['section']
 
+    remove_empty_cells()
     dfu = pd.read_csv('UserList/Unregistered.csv')
     dfr = pd.read_csv('UserList/Registered.csv')
 
@@ -700,6 +708,7 @@ def deleteunregistereduser():
 
     idx = int(request.form['index'])
 
+    remove_empty_cells()
     dfu = pd.read_csv('UserList/Unregistered.csv')
     username = dfu.iloc[idx]['Name']
     userid = dfu.iloc[idx]['ID']
