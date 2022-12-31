@@ -1,4 +1,4 @@
-# Facial Recognition Attendance System GUI
+# Facial Recognition Attendance System
 
 <p align="center">
 <a href="https://postimg.cc/Z0CpsdxY" target="_blank"><img src="https://i.postimg.cc/BZCp658F/Screenshot-2022-11-29-223142.png" alt="Screenshot-2022-11-29-223142" style="width: 48%; margin: 32px;"/></a> <a href="https://postimg.cc/hh6xkt2L" target="_blank"><img src="https://i.postimg.cc/pXXZn986/Screenshot-2022-11-29-223214.png" alt="Screenshot-2022-11-29-223214" style="width: 48%; margin: 32px;"/></a>
